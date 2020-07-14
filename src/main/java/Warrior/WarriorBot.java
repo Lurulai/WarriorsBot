@@ -22,8 +22,7 @@ public class WarriorBot {
         EventWaiter waiter = new EventWaiter();
 
         // Initializing the bot, setting status, and adding commands
-        jda = new JDABuilder(AccountType.BOT)
-                .setToken(Constants.CLIENT_SECRET_CODE)
+        jda = JDABuilder.createDefault(Constants.CLIENT_SECRET_CODE)
                 .addEventListeners(commandClient(waiter).build(), waiter)
                 .setStatus(OnlineStatus.DO_NOT_DISTURB).build();
 
