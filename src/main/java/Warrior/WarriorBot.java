@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
+import org.apache.log4j.BasicConfigurator;
 import utils.Constants;
 
 import javax.security.auth.login.LoginException;
@@ -26,16 +27,17 @@ public class WarriorBot {
         // EventWaiter is used for an event to happen, like asking a question and waiting for a response
         EventWaiter waiter = new EventWaiter();
 
+        // Initialize loggers
+        BasicConfigurator.configure();
+
         // Initializing the bot, setting status, and adding commands
         jda = JDABuilder.createDefault(Constants.CLIENT_SECRET_CODE)
-                .addEventListeners(commandClient(waiter).build(), waiter)
-                .setStatus(OnlineStatus.DO_NOT_DISTURB).build();
+                .addEventListeners(commandClient(waiter).build(), waiter, new PrivateChannelListener())
+                .setActivity(Activity.of(Activity.ActivityType.DEFAULT, "Booting up..."))
+                .setStatus(OnlineStatus.ONLINE).build();
 
         // When bot disconnects for whatever reason, attempt to reconnect automatically
         jda.setAutoReconnect(true);
-
-        // Set the status text
-        jda.getPresence().setActivity(Activity.watching("TYPE WHAT YOU WANT THE STATUS TO BE"));
 
         // Wait for the bot to be connected entirely
         jda.awaitStatus(JDA.Status.CONNECTED);
@@ -53,11 +55,13 @@ public class WarriorBot {
         client.setPrefix(Constants.D_PREFIX)
                 .setOwnerId(Constants.BOT_OWNER_ID)
                 .setCoOwnerIds(Constants.CO_OWNER_IDS)
+                .setActivity(Activity.streaming("cats", "https://www.youtube.com/watch?v=0spYbvgklFc"))
                 .setServerInvite(Constants.SERVER_INVITE)
                 .setEmojis(Constants.SUCCESS, Constants.WARNING, Constants.ERROR)
                 .useHelpBuilder(false)
                 .addCommands(
                         // Add commands here
+
                 );
         System.out.println("Module loaded");
 
