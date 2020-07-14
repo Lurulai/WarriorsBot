@@ -13,9 +13,9 @@ public class WarriorBot {
 
     /**
      * Main method, initializes the jda process (the bot) using the token from Constant class
-     * @param args
-     * @throws InterruptedException
-     * @throws LoginException
+     * @param args - argument from the command line
+     * @throws InterruptedException - exception thrown when the bot waiting for Connection is interrupted
+     * @throws LoginException - exception thrown when the bot cannot login properly
      */
     public static void main(String[] args) throws InterruptedException, LoginException {
         // EventWaiter is used for an event to happen, like asking a question and waiting for a response
@@ -41,8 +41,8 @@ public class WarriorBot {
      * Command builder to make all the commands. This is like a framework so that you can initialize
      * all of the commands and setup the bot, like it's prefix, it's owners/co-owners, it's invite link,
      * and initialize all the commands.
-     * @param waiter
-     * @return
+     * @param waiter - a EventWaiter class that is used to await for responses or events to occur
+     * @return CommandClientBuilder
      */
     private static CommandClientBuilder commandClient(EventWaiter waiter) {
         CommandClientBuilder client = new CommandClientBuilder();
@@ -64,7 +64,7 @@ public class WarriorBot {
      * A getter method to get the jda instance (in-case we use it)
      * JDA is like the main-main boi for discord and has all the information that it receives from
      * discord.
-     * @return
+     * @return JDA
      */
     public static JDA getJda() {
         return jda;
