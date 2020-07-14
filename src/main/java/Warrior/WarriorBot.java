@@ -8,7 +8,12 @@ import utils.Constants;
 
 import javax.security.auth.login.LoginException;
 
+/**
+ * WarriorBot class which is the main class, contains only initialization of main processes used
+ * in the program and such.
+ */
 public class WarriorBot {
+    // A global variable because we may need to use it in different methods or classes
     private static JDA jda;
 
     /**
