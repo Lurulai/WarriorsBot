@@ -17,12 +17,12 @@ public class Medicine extends Catto {
         super(name, age, "Medicine");
     }
 
-    public boolean setSubClass(String subClass) {
-        switch(subClass.toLowerCase()){
-            case "full":
+    public boolean setSubClass(int subClass) {
+        switch(subClass){
+            case 1:
                 this.subClass = SubClass.TYPE.FULL;
                 break;
-            case "apprentice":
+            case 2:
                 this.subClass = SubClass.TYPE.APPRENTICE;
                 break;
             default : return true;

@@ -51,5 +51,7 @@ public abstract class Catto {
         }
     }
 
-    abstract boolean setSubClass(String subclass);
+    abstract boolean setSubClass(int subclass);
+    abstract int getHealth();
+    abstract void setHealth(int health);
 }

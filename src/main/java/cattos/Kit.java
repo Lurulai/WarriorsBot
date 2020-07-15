@@ -17,8 +17,8 @@ public class Kit extends Catto{
         super(name, age, "Kit");
     }
 
-    public boolean setSubClass(String subClass) {
-        if ("regular".equals(subClass.toLowerCase())) {
+    public boolean setSubClass(int subClass) {
+        if (subClass == 1) {
             this.subClass = SubClass.TYPE.REGULAR_K;
             return true;
         }

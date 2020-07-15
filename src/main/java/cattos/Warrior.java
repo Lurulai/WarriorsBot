@@ -16,18 +16,18 @@ public class Warrior extends Catto{
         super(name, age, "Warrior");
     }
 
-    public boolean setSubClass(String subClass) {
-        switch(subClass.toLowerCase()){
-            case "leader":
+    public boolean setSubClass(int subClass) {
+        switch(subClass){
+            case 1:
                 this.subClass = SubClass.TYPE.LEADER;
                 break;
-            case "senior":
+            case 2:
                 this.subClass = SubClass.TYPE.SENIOR_W;
                 break;
-            case "regular":
+            case 3:
                 this.subClass = SubClass.TYPE.REGULAR_W;
                 break;
-            case "young":
+            case 4:
                 this.subClass = SubClass.TYPE.YOUNG_W;
                 break;
             default : return false;

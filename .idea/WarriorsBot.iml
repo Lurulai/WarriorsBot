@@ -21,8 +21,9 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.1" level="project" />
+    <orderEntry type="library" name="Maven: com.vdurmont:emoji-java:4.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20170516" level="project" />
     <orderEntry type="library" name="Maven: com.jagrosh:jda-utilities-command:3.0.4" level="project" />
-    <orderEntry type="library" name="Maven: org.json:json:20160810" level="project" />
     <orderEntry type="library" name="Maven: com.jagrosh:jda-utilities-commons:3.0.4" level="project" />
     <orderEntry type="library" name="Maven: com.jagrosh:jda-utilities-doc:3.0.4" level="project" />
     <orderEntry type="library" name="Maven: com.jagrosh:jda-utilities-examples:3.0.4" level="project" />

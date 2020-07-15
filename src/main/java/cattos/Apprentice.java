@@ -17,15 +17,15 @@ public class Apprentice extends Catto{
         super(name, age, "Apprentice");
     }
 
-    public boolean setSubClass(String subClass) {
-        switch(subClass.toLowerCase()){
-            case "senior":
+    public boolean setSubClass(int subClass) {
+        switch(subClass){
+            case 1:
                 this.subClass = SubClass.TYPE.SENIOR_A;
                 break;
-            case "regular":
+            case 2:
                 this.subClass = SubClass.TYPE.REGULAR_A;
                 break;
-            case "young":
+            case 3:
                 this.subClass = SubClass.TYPE.YOUNG_A;
                 break;
             default : return false;

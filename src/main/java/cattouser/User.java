@@ -13,6 +13,11 @@ public class User {
         this.cattos = new ArrayList<>();
     }
 
+    public User(User u){
+        this.userID = u.getUserID();
+        this.cattos = new ArrayList<>(u.getCattos());
+    }
+
     public ArrayList<Catto> getCattos(){
         return cattos;
     }

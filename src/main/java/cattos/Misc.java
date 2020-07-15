@@ -17,12 +17,12 @@ public class Misc extends Catto {
         super(name, age, "Misc");
     }
 
-    public boolean setSubClass(String subClass) {
-        switch(subClass.toLowerCase()){
-            case "elder":
+    public boolean setSubClass(int subClass) {
+        switch(subClass){
+            case 1:
                 this.subClass = SubClass.TYPE.ELDER;
                 break;
-            case "queen":
+            case 2:
                 this.subClass = SubClass.TYPE.QUEEN;
                 break;
             default : return false;

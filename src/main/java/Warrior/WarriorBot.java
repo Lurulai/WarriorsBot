@@ -67,7 +67,7 @@ public class WarriorBot {
                 .useHelpBuilder(false)
                 .addCommands(
                         // Add commands here
-                        new CreateCatto(),
+                        new CreateCatto(waiter),
                         new Profile()
                 );
         System.out.println("Module loaded");
