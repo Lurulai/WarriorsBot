@@ -6,13 +6,9 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.menu.ButtonMenu;
-import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -41,11 +37,6 @@ public class CreateCatto extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-//        String[] args = event.getArgs().split(" ");
-//        if(args.length < 4){
-//            event.getTextChannel().sendMessage("Not enough arguments.").queue();
-//            return;
-//        }
 
         boolean userFound = false;
         for (User u : registeredUsers) {
@@ -161,7 +152,7 @@ public class CreateCatto extends Command {
                             Warrior warrior = new Warrior(name);
                             warrior.setAge(Integer.parseInt(age));
                             cattoClass = "Warrior";
-                            boolean isValid = warrior.setSubClass(emojiToNumber(v.getEmoji()));
+                            boolean isValid = warrior.setSubClass(emojiToNumber(v.getName()));
                             if (isValid) user.addCatto(warrior);
                             break;
                         }
@@ -169,7 +160,7 @@ public class CreateCatto extends Command {
                             Apprentice apprentice = new Apprentice(name);
                             apprentice.setAge(Integer.parseInt(age));
                             cattoClass = "Apprentice";
-                            boolean isValid = apprentice.setSubClass(emojiToNumber(v.getEmoji()));
+                            boolean isValid = apprentice.setSubClass(emojiToNumber(v.getName()));
                             if (isValid) user.addCatto(apprentice);
                             break;
                         }
@@ -177,7 +168,7 @@ public class CreateCatto extends Command {
                             Medicine medicine = new Medicine(name);
                             medicine.setAge(Integer.parseInt(age));
                             cattoClass = "Medicine";
-                            boolean isValid = medicine.setSubClass(emojiToNumber(v.getEmoji()));
+                            boolean isValid = medicine.setSubClass(emojiToNumber(v.getName()));
                             if (isValid) user.addCatto(medicine);
                             break;
                         }
@@ -185,7 +176,7 @@ public class CreateCatto extends Command {
                             Misc misc = new Misc(name);
                             misc.setAge(Integer.parseInt(age));
                             cattoClass = "Misc";
-                            boolean isValid = misc.setSubClass(emojiToNumber(v.getEmoji()));
+                            boolean isValid = misc.setSubClass(emojiToNumber(v.getName()));
                             if (isValid) user.addCatto(misc);
                             break;
                         }
@@ -213,6 +204,7 @@ public class CreateCatto extends Command {
     }
 
     private int emojiToNumber(String emoji) {
+        System.out.println(emoji);
         switch (emoji) {
             case ":one:":
                 return 1;
