@@ -413,6 +413,7 @@ public class EmbedPaginator extends Menu {
          * @return This builder
          */
         public Builder addItems(MessageEmbed... embeds){
+            this.embeds.clear();
             this.embeds.addAll(Arrays.asList(embeds));
             return this;
         }
