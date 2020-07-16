@@ -38,8 +38,14 @@ public class Misc extends Catto {
         this.health = health;
     }
 
-    public SubClass.TYPE getSubClass() {
-        return subClass;
+    public String getSubClass() {
+        if (this.subClass.equals(SubClass.TYPE.ELDER)) {
+            return "Elder";
+        } else if (this.subClass.equals(SubClass.TYPE.QUEEN)) {
+            return "Queen";
+        } else {
+            return "";
+        }
     }
 
 }

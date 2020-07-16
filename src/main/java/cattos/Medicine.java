@@ -38,8 +38,14 @@ public class Medicine extends Catto {
         this.health = health;
     }
 
-    public SubClass.TYPE getSubClass() {
-        return subClass;
+    public String getSubClass() {
+        if (this.subClass.equals(SubClass.TYPE.FULL)) {
+            return "Full";
+        } else if (this.subClass.equals(SubClass.TYPE.APPRENTICE)) {
+            return "Apprentice";
+        } else {
+            return "";
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package cattos;
 
 public class Apprentice extends Catto{
-
     private int health = 100;
     private SubClass.TYPE subClass;
 
@@ -41,8 +40,16 @@ public class Apprentice extends Catto{
         this.health = health;
     }
 
-    public SubClass.TYPE getSubClass() {
-        return subClass;
+    public String getSubClass() {
+        if (this.subClass.equals(SubClass.TYPE.SENIOR_A)) {
+            return "Senior";
+        } else if (this.subClass.equals(SubClass.TYPE.REGULAR_A)) {
+            return "Regular";
+        } else if (this.subClass.equals(SubClass.TYPE.YOUNG_A)) {
+            return "Young";
+        } else {
+            return "";
+        }
     }
 
     public void setSubClass(SubClass.TYPE subClass) {

@@ -4,6 +4,8 @@ import cattos.*;
 import cattouser.User;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.jagrosh.jdautilities.menu.Paginator;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Activity;
 
@@ -13,11 +15,24 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class Profile extends Command {
-    public Profile() {
+    private final Paginator.Builder builder;
+
+    public Profile(EventWaiter waiter) {
         this.name = "cats";
         this.aliases = new String[]{"profile"};
 //        this.category = new Category("Informative");
         this.ownerCommand = false;
+        builder = new Paginator.Builder()
+                .setColor(Color.orange)
+                .setColumns(1)
+                .setFinalAction(m -> m.delete().queue())
+                .setItemsPerPage(1)
+                .waitOnSinglePage(false)
+                .useNumberedItems(false)
+                .showPageNumbers(true)
+                .wrapPageEnds(true)
+                .setEventWaiter(waiter)
+                .setTimeout(1, TimeUnit.MINUTES);
     }
 
     @Override

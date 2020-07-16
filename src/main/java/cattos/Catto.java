@@ -5,6 +5,7 @@ public abstract class Catto {
     boolean isAgeFrozen = false;
     private String name;
     private String cattoClass;
+    private String imageUrl;
 
     public Catto(String cattoClass){
         this.cattoClass = cattoClass;
@@ -32,6 +33,14 @@ public abstract class Catto {
     public String getName() {
         return name;
     }
+
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getImageUrl() { return imageUrl; }
+
+    public void setAgeFrozen(boolean isAgeFrozen) { this.isAgeFrozen = isAgeFrozen; }
+
+    public boolean getAgeFrozen() { return isAgeFrozen; }
 
     public void setName(String name) {
         this.name = name;

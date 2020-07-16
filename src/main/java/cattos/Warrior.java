@@ -43,8 +43,18 @@ public class Warrior extends Catto{
         this.health = health;
     }
 
-    public SubClass.TYPE getSubClass() {
-        return subClass;
+    public String getSubClass() {
+        if (this.subClass.equals(SubClass.TYPE.LEADER)) {
+            return "Leader";
+        } else if (this.subClass.equals(SubClass.TYPE.SENIOR_W)) {
+            return "Senior";
+        } else if (this.subClass.equals(SubClass.TYPE.REGULAR_W)) {
+            return "Regular";
+        } else if (this.subClass.equals(SubClass.TYPE.YOUNG_W)) {
+            return "Young";
+        } else {
+            return "";
+        }
     }
 
 }
