@@ -17,7 +17,6 @@ package utils;
 
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.menu.Menu;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.GenericMessageEvent;
@@ -27,10 +26,7 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.internal.utils.Checks;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -57,16 +53,16 @@ public class EmbedPaginator extends Menu {
     private final String rightText;
     private final boolean allowTextInput;
 
-    public static final String BIG_LEFT = "\u23EA";
-    public static final String LEFT = "\u25C0";
-    public static final String STOP = "\u23F9";
-    public static final String RIGHT = "\u25B6";
-    public static final String BIG_RIGHT = "\u23E9";
+    private static final String BIG_LEFT = "\u23EA";
+    private static final String LEFT = "\u25C0";
+    private static final String STOP = "\u23F9";
+    private static final String RIGHT = "\u25B6";
+    private static final String BIG_RIGHT = "\u23E9";
 
-    protected EmbedPaginator(EventWaiter waiter, Set<User> users, Set<Role> roles, long timeout, TimeUnit unit,
-                             BiFunction<Integer, Integer, String> text, Consumer<Message> finalAction,
-                             boolean waitOnSinglePage, List<MessageEmbed> embeds, int bulkSkipNumber,
-                             boolean wrapPageEnds, String leftText, String rightText, boolean allowTextInput){
+    private EmbedPaginator(EventWaiter waiter, Set<User> users, Set<Role> roles, long timeout, TimeUnit unit,
+                           BiFunction<Integer, Integer, String> text, Consumer<Message> finalAction,
+                           boolean waitOnSinglePage, List<MessageEmbed> embeds, int bulkSkipNumber,
+                           boolean wrapPageEnds, String leftText, String rightText, boolean allowTextInput){
         super(waiter, users, roles, timeout, unit);
         this.text = text;
         this.finalAction = finalAction;
@@ -113,7 +109,7 @@ public class EmbedPaginator extends Menu {
      * @param  pageNum
      *         The page number to begin on
      */
-    public void paginate(MessageChannel channel, int pageNum){
+    private void paginate(MessageChannel channel, int pageNum){
         if(pageNum < 1)
             pageNum = 1;
         else if(pageNum > embeds.size())
@@ -132,7 +128,7 @@ public class EmbedPaginator extends Menu {
      * @param  pageNum
      *         The page number to begin on
      */
-    public void paginate(Message message, int pageNum){
+    private void paginate(Message message, int pageNum){
         if(pageNum < 1)
             pageNum = 1;
         else if(pageNum > embeds.size())
@@ -201,9 +197,9 @@ public class EmbedPaginator extends Menu {
                 int pages = embeds.size();
                 final int targetPage;
 
-                if(leftText != null && rawContent.equalsIgnoreCase(leftText) && (1 < pageNum || wrapPageEnds))
+                if(rawContent.equalsIgnoreCase(leftText) && (1 < pageNum || wrapPageEnds))
                     targetPage = pageNum - 1 < 1 ? pages : pageNum - 1;
-                else if(rightText != null && rawContent.equalsIgnoreCase(rightText) && (pageNum < pages || wrapPageEnds))
+                else if(rawContent.equalsIgnoreCase(rightText) && (pageNum < pages || wrapPageEnds))
                     targetPage = pageNum + 1 > pages && wrapPageEnds ? 1 : pageNum + 1;
                 else
                     targetPage = Integer.parseInt(rawContent);
@@ -228,10 +224,10 @@ public class EmbedPaginator extends Menu {
             case LEFT:
             case STOP:
             case RIGHT:
-                return isValidUser(event.getUser(), event.isFromGuild() ? event.getGuild() : null);
+                return isValidUser(Objects.requireNonNull(event.getUser()), event.isFromGuild() ? event.getGuild() : null);
             case BIG_LEFT:
             case BIG_RIGHT:
-                return bulkSkipNumber > 1 && isValidUser(event.getUser(), event.isFromGuild() ? event.getGuild() : null);
+                return bulkSkipNumber > 1 && isValidUser(Objects.requireNonNull(event.getUser()), event.isFromGuild() ? event.getGuild() : null);
             default:
                 return false;
         }
@@ -256,7 +252,7 @@ public class EmbedPaginator extends Menu {
             case BIG_LEFT:
                 if(newPageNum > 1 || wrapPageEnds){
                     for(int i = 1; (newPageNum > 1 || wrapPageEnds) && i < bulkSkipNumber; i++){
-                        if(newPageNum == 1 && wrapPageEnds)
+                        if(newPageNum == 1)
                             newPageNum = pages + 1;
                         newPageNum--;
                     }
@@ -265,7 +261,7 @@ public class EmbedPaginator extends Menu {
             case BIG_RIGHT:
                 if(newPageNum < pages || wrapPageEnds){
                     for(int i = 1; (newPageNum < pages || wrapPageEnds) && i < bulkSkipNumber; i++){
-                        if(newPageNum == pages && wrapPageEnds)
+                        if(newPageNum == pages)
                             newPageNum = 0;
                         newPageNum++;
                     }
@@ -277,7 +273,7 @@ public class EmbedPaginator extends Menu {
         }
 
         try{
-            event.getReaction().removeReaction(event.getUser()).queue();
+            event.getReaction().removeReaction(Objects.requireNonNull(event.getUser())).queue();
         }catch(PermissionException ignored){}
 
         int n = newPageNum;
@@ -303,7 +299,6 @@ public class EmbedPaginator extends Menu {
         private BiFunction<Integer, Integer, String> text = (page, pages) -> null;
         private Consumer<Message> finalAction = m -> m.delete().queue();
         private boolean waitOnSinglePage = false;
-        private int bulkSkipNumber = 1;
         private boolean wrapPageEnds = false;
         private String leftText = null;
         private String rightText = null;
@@ -328,6 +323,7 @@ public class EmbedPaginator extends Menu {
             Checks.check(waiter != null, "Must set an EventWaiter");
             Checks.check(!embeds.isEmpty(), "Must include at least one item to paginate");
 
+            int bulkSkipNumber = 1;
             return new EmbedPaginator(
                     waiter, users, roles, timeout, unit, text, finalAction, waitOnSinglePage, embeds, bulkSkipNumber,
                     wrapPageEnds, leftText, rightText, allowTextInput
@@ -345,23 +341,6 @@ public class EmbedPaginator extends Menu {
          */
         public Builder setText(String text){
             this.text = (i0, i1) -> text;
-            return this;
-        }
-
-        /**
-         * Sets the text of the {@link net.dv8tion.jda.api.entities.Message Message} to be displayed relative to the
-         * total page number and the current page as determined by the provided 
-         * {@link java.util.function.BiFunction BiFunction}.
-         * <br>As the page changes, the BiFunction will re-process the current page number and the total page number,
-         * allowing for the displayed text of the Message to change depending on the page number.
-         *
-         * @param  textBiFunction
-         *         The BiFunction that uses both current and total page numbers, to get text for the Message
-         *
-         * @return This builder
-         */
-        public Builder setText(BiFunction<Integer, Integer, String> textBiFunction){
-            this.text = textBiFunction;
             return this;
         }
 
@@ -395,16 +374,6 @@ public class EmbedPaginator extends Menu {
         }
 
         /**
-         * Clears all previously set items.
-         *
-         * @return This builder
-         */
-        public Builder clearItems(){
-            this.embeds.clear();
-            return this;
-        }
-
-        /**
          * Adds {@link net.dv8tion.jda.api.entities.MessageEmbed MessageEmbeds} to the list of items to paginate.
          *
          * @param  embeds
@@ -415,69 +384,6 @@ public class EmbedPaginator extends Menu {
         public Builder addItems(MessageEmbed... embeds){
             this.embeds.clear();
             this.embeds.addAll(Arrays.asList(embeds));
-            return this;
-        }
-
-        /**
-         * Adds {@link net.dv8tion.jda.api.entities.MessageEmbed MessageEmbeds} to the list of items to paginate.
-         * <br>This method creates a new, basic MessageEmbed containing only the provided String as description.
-         * <br>Use the {@link com.jagrosh.jdautilities.menu.Paginator Paginator} for more Embed customization,
-         * without providing your own MessageEmbed instances.
-         *
-         * @param  items
-         *         The String list of items to add as MessageEmbeds
-         *
-         * @return This builder
-         */
-        public Builder addItems(String... items){
-            for(String item : items)
-                this.embeds.add(new EmbedBuilder().setDescription(item).build());
-            return this;
-        }
-
-        /**
-         * Sets the {@link net.dv8tion.jda.api.entities.MessageEmbed MessageEmbeds} to paginate.
-         * <br>This method clears all previously set items before setting.
-         *
-         * @param  embeds
-         *         The MessageEmbed list of items to add
-         *
-         * @return This builder
-         */
-        public Builder setItems(MessageEmbed... embeds){
-            this.embeds.clear();
-            this.embeds.addAll(Arrays.asList(embeds));
-            return this;
-        }
-
-        /**
-         * Sets the {@link net.dv8tion.jda.api.entities.MessageEmbed MessageEmbeds} to paginate.
-         * <br>This method clears all previously set items before setting each String as a new MessageEmbed.
-         * <br>Use the {@link com.jagrosh.jdautilities.menu.Paginator Paginator} for more Embed customization,
-         * without providing your own MessageEmbed instances.
-         *
-         * @param  items
-         *         The String list of items to add
-         *
-         * @return This builder
-         */
-        public Builder setItems(String... items){
-            this.embeds.clear();
-            addItems(items);
-            return this;
-        }
-
-        /**
-         * Sets the {@link EmbedPaginator EmbedPaginator}'s bulk-skip function to
-         * skip multiple pages using alternate forward and backwards reactions.
-         *
-         * @param  bulkSkipNumber
-         *         The number of pages to skip when the bulk-skip reactions are used.
-         *
-         * @return This builder
-         */
-        public Builder setBulkSkipNumber(int bulkSkipNumber){
-            this.bulkSkipNumber = bulkSkipNumber;
             return this;
         }
 
@@ -500,7 +406,6 @@ public class EmbedPaginator extends Menu {
          * be specified by a user via text.
          *
          * <p>Note that setting this doesn't mean that left and right text inputs provided via
-         * {@link EmbedPaginator.Builder#setLeftRightText(String, String)} will be invalidated if they were set
          * previously! To invalidate those, provide {@code null} for one or both of the parameters of that method.
          *
          * @param  allowTextInput
@@ -513,27 +418,5 @@ public class EmbedPaginator extends Menu {
             return this;
         }
 
-        /**
-         * Sets the {@link EmbedPaginator EmbedPaginator} to traverse left or right
-         * when a provided text input is sent in the form of a Message to the 
-         * {@link net.dv8tion.jda.api.entities.GuildChannel GuildChannel} the menu is displayed in.
-         *
-         * @param  left
-         *         The left text input, causes the EmbedPaginator to traverse one page left.
-         * @param  right
-         *         The right text input, causes the EmbedPaginator to traverse one page right.
-         *
-         * @return This builder
-         */
-        public Builder setLeftRightText(String left, String right){
-            if(left == null || right == null){
-                leftText = null;
-                rightText = null;
-            }else{
-                leftText = left;
-                rightText = right;
-            }
-            return this;
-        }
     }
 }

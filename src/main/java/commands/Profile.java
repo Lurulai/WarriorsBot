@@ -85,10 +85,10 @@ public class Profile extends Command {
             i++;
         }
 
-        builder.addItems(embeds);
-        builder.setUsers(event.getAuthor(), WarriorBot.getJda().retrieveUserById(Constants.BOT_OWNER_ID).complete(), WarriorBot.getJda().retrieveUserById(Constants.CO_OWNER_IDS[0]).complete());
-        builder.setText(event.getMember().getAsMention() + ", your cats.");
-        builder.build().display(event.getTextChannel());
+        builder.addItems(embeds)
+                .setUsers(event.getAuthor(), WarriorBot.getJda().retrieveUserById(Constants.BOT_OWNER_ID).complete(), WarriorBot.getJda().retrieveUserById(Constants.CO_OWNER_IDS[0]).complete())
+                .setText(event.getMember().getAsMention() + ", your cats.")
+                .build().display(event.getTextChannel());
 
         event.getMessage().delete().queue();
     }
