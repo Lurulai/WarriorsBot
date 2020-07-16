@@ -24,6 +24,14 @@ public class Health extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        String userID;
+        if(event.getMessage().getMentionedMembers().size() > 0){
+            userID = event.getMessage().getMentionedMembers().get(0).getId();
+        }
+        else{
+            userID = event.getAuthor().getId();
+        }
+
         EmbedBuilder em = new EmbedBuilder();
         em.setTitle(":cat: Active Cats");
         em.setDescription(event.getAuthor().getAsMention() + ", your cats.");
@@ -32,7 +40,7 @@ public class Health extends Command {
         StringBuilder cattoNames = new StringBuilder();
         StringBuilder cattoHealth = new StringBuilder();
 
-        User u = CreateCatto.registeredUsers.stream().filter(v -> v.getUserID().equals(event.getAuthor().getId())).findFirst().orElse(null);
+        User u = CreateCatto.registeredUsers.stream().filter(v -> v.getUserID().equals(userID)).findFirst().orElse(null);
         if(u == null){
             event.getTextChannel().sendMessage("Ha sucker, you don't have cattos").queue();
             return;

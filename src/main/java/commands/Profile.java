@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import utils.Constants;
 import utils.EmbedPaginator;
+import utils.Send;
 import warrior.WarriorBot;
 
 import java.awt.*;
@@ -35,7 +36,8 @@ public class Profile extends Command {
     protected void execute(CommandEvent event) {
         User u = CreateCatto.registeredUsers.stream().filter(v -> v.getUserID().equals(event.getAuthor().getId())).findFirst().orElse(null);
         if(u == null){
-            event.getTextChannel().sendMessage("Ha sucker, you don't have cattos").queue();
+            Send.error(event, "You don't have any cats. Create a cat by using this command:\n" +
+                    "`"+Constants.D_PREFIX+"create`", "", 10, TimeUnit.SECONDS);
             return;
         }
 
@@ -55,30 +57,47 @@ public class Profile extends Command {
                     Warrior w = (Warrior) c;
                     em.addField("Health", ""+w.getHealth(), true);
                     em.addField("Job", w.getCattoClass(), true);
-                    if(!w.getSubClass().isEmpty()) em.addField("Position", w.getSubClass(), true);
+                    if (w.getSubClass().isEmpty()) {
+                        em.addBlankField(true);
+                    } else {
+                        em.addField("Position", w.getSubClass(), true);
+                    }
                     break;
                 case "apprentice":
                     Apprentice a = (Apprentice) c;
                     em.addField("Health", ""+a.getHealth(), true);
                     em.addField("Job", a.getCattoClass(), true);
-                    if(!a.getSubClass().isEmpty()) em.addField("Position", a.getSubClass(), true);
+                    if (a.getSubClass().isEmpty()) {
+                        em.addBlankField(true);
+                    } else {
+                        em.addField("Position", a.getSubClass(), true);
+                    }
                     break;
                 case "misc":
                     Misc m = (Misc) c;
                     em.addField("Health", ""+m.getHealth(), true);
                     em.addField("Job", m.getCattoClass(), true);
-                    if(!m.getSubClass().isEmpty()) em.addField("Position", m.getSubClass(), true);
+                    if (m.getSubClass().isEmpty()) {
+                        em.addBlankField(true);
+                    } else {
+                        em.addField("Position", m.getSubClass(), true);
+                    }
                     break;
                 case "medicine":
                     Medicine med = (Medicine) c;
                     em.addField("Health", ""+med.getHealth(), true);
                     em.addField("Job", med.getCattoClass(), true);
-                    if(!med.getSubClass().isEmpty()) em.addField("Position", med.getSubClass(), true);
+                    if (med.getSubClass().isEmpty()) {
+                        em.addBlankField(true);
+                    } else {
+                        em.addField("Position", med.getSubClass(), true);
+                    }
                     break;
                 case "kit":
                     Kit k = (Kit) c;
                     em.addField("Health", ""+k.getHealth(), true);
-                    em.addField("Class", k.getCattoClass(), true);
+                    em.addField("Job", k.getCattoClass(), true);
+                    em.addBlankField(true);
                     break;
             }
             embeds[i] = em.build();
