@@ -8,12 +8,12 @@ public class Warrior extends Catto{
         super("Warrior");
     }
 
-    public Warrior(String name){
-        super(name, "Warrior");
+    public Warrior(String name, String description){
+        super(name, "Warrior", description);
     }
 
-    public Warrior(String name, int age) {
-        super(name, age, "Warrior");
+    public Warrior(String name, int age, String description) {
+        super(name, age, "Warrior", description);
     }
 
     public boolean setSubClass(int subClass) {

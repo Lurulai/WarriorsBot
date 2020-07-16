@@ -9,12 +9,12 @@ public class Medicine extends Catto {
         super("Medicine");
     }
 
-    public Medicine(String name){
-        super(name, "Medicine");
+    public Medicine(String name, String description){
+        super(name, "Medicine", description);
     }
 
-    public Medicine(String name, int age) {
-        super(name, age, "Medicine");
+    public Medicine(String name, int age, String description) {
+        super(name, age, "Medicine", description);
     }
 
     public boolean setSubClass(int subClass) {

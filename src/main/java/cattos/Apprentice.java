@@ -8,12 +8,12 @@ public class Apprentice extends Catto{
         super("Apprentice");
     }
 
-    public Apprentice(String name){
-        super(name, "Apprentice");
+    public Apprentice(String name, String description){
+        super(name, "Apprentice", description);
     }
 
-    public Apprentice(String name, int age) {
-        super(name, age, "Apprentice");
+    public Apprentice(String name, int age, String description) {
+        super(name, age, "Apprentice", description);
     }
 
     public boolean setSubClass(int subClass) {

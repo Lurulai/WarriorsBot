@@ -9,12 +9,12 @@ public class Kit extends Catto{
         super("Kit");
     }
 
-    public Kit(String name){
-        super(name, "Kit");
+    public Kit(String name, String description){
+        super(name, "Kit", description);
     }
 
-    public Kit(String name, int age) {
-        super(name, age, "Kit");
+    public Kit(String name, int age, String description) {
+        super(name, age, "Kit", description);
     }
 
     public boolean setSubClass(int subClass) {

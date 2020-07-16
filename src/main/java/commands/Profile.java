@@ -5,84 +5,89 @@ import cattouser.User;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.jagrosh.jdautilities.menu.Paginator;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import utils.Constants;
+import utils.EmbedPaginator;
 
 import java.awt.*;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class Profile extends Command {
-    private final Paginator.Builder builder;
+    private final EmbedPaginator.Builder builder;
 
     public Profile(EventWaiter waiter) {
         this.name = "cats";
         this.aliases = new String[]{"profile"};
 //        this.category = new Category("Informative");
         this.ownerCommand = false;
-        builder = new Paginator.Builder()
-                .setColor(Color.orange)
-                .setColumns(1)
+        builder = new EmbedPaginator.Builder()
                 .setFinalAction(m -> m.delete().queue())
-                .setItemsPerPage(1)
                 .waitOnSinglePage(false)
-                .useNumberedItems(false)
-                .showPageNumbers(true)
                 .wrapPageEnds(true)
                 .setEventWaiter(waiter)
-                .setTimeout(1, TimeUnit.MINUTES);
+                .setTimeout(1, TimeUnit.MINUTES)
+                .allowTextInput(false);
     }
 
     @Override
     protected void execute(CommandEvent event) {
-        EmbedBuilder em = new EmbedBuilder();
-        em.setTitle(":cat: Active Cats");
-        em.setDescription(event.getAuthor().getAsMention() + ", your cats.");
-        em.setColor(Color.orange);
-
-        StringBuilder cattoNames = new StringBuilder();
-        StringBuilder cattoHealth = new StringBuilder();
-
         User u = CreateCatto.registeredUsers.stream().filter(v -> v.getUserID().equals(event.getAuthor().getId())).findFirst().orElse(null);
         if(u == null){
-            event.getTextChannel().sendMessage("Ha sucker, you don't don't have cattos").queue();
+            event.getTextChannel().sendMessage("Ha sucker, you don't have cattos").queue();
             return;
         }
+
+        MessageEmbed[] embeds = new MessageEmbed[u.getCattos().size()];
+        int i = 0;
         for(Catto c : u.getCattos()){
-            cattoNames.append(c.getName()).append("\n");
+            EmbedBuilder em = new EmbedBuilder();
+            em.setTitle(event.getMember().getEffectiveName() + "'s Cats");
+            if(!c.getDescription().isEmpty()) em.setDescription(c.getDescription());
+            em.setColor(Color.orange);
+            em.addField("Name", c.getName(), true);
+            em.addField("Age", ""+c.getAge()+" moons", true);
+            em.addField("Age Frozen", (c.getAgeFrozen() ? "Yes" : "No"), true);
+            if(!c.getImageUrl().isEmpty()) em.setThumbnail(c.getImageUrl());
             switch(c.getCattoClass().toLowerCase()){
                 case "warrior":
                     Warrior w = (Warrior) c;
-                    cattoHealth.append(w.getHealth()).append("\n");
+                    em.addField("Health", ""+w.getHealth(), true);
+                    em.addField("Class", w.getCattoClass(), true);
+                    if(!w.getSubClass().isEmpty()) em.addField("Subclass", w.getSubClass(), true);
                     break;
                 case "apprentice":
                     Apprentice a = (Apprentice) c;
-                    cattoHealth.append(a.getHealth()).append("\n");
+                    em.addField("Health", ""+a.getHealth(), true);
+                    em.addField("Class", a.getCattoClass(), true);
+                    if(!a.getSubClass().isEmpty()) em.addField("Subclass", a.getSubClass(), true);
                     break;
                 case "misc":
                     Misc m = (Misc) c;
-                    cattoHealth.append(m.getHealth()).append("\n");
+                    em.addField("Health", ""+m.getHealth(), true);
+                    em.addField("Class", m.getCattoClass(), true);
+                    if(!m.getSubClass().isEmpty()) em.addField("Subclass", m.getSubClass(), true);
                     break;
                 case "medicine":
                     Medicine med = (Medicine) c;
-                    cattoHealth.append(med.getHealth()).append("\n");
+                    em.addField("Health", ""+med.getHealth(), true);
+                    em.addField("Class", med.getCattoClass(), true);
+                    if(!med.getSubClass().isEmpty()) em.addField("Subclass", med.getSubClass(), true);
                     break;
                 case "kit":
                     Kit k = (Kit) c;
-                    cattoHealth.append(k.getHealth()).append("\n");
+                    em.addField("Health", ""+k.getHealth(), true);
+                    em.addField("Class", k.getCattoClass(), true);
                     break;
             }
+            embeds[i] = em.build();
+            i++;
         }
 
-        em.addField("Names", cattoNames.toString(), true);
-        em.addField("Health", cattoHealth.toString(), true);
-
-        event.getTextChannel().sendMessage(em.build()).queue(v -> {
-            ScheduledExecutorService ex = new ScheduledThreadPoolExecutor(2);
-            ex.schedule(() -> v.delete().queue(),1, TimeUnit.MINUTES    );
-        });
+        builder.addItems(embeds);
+        builder.setUsers(event.getAuthor(), event.getGuild().getMemberById(Constants.BOT_OWNER_ID).getUser(), event.getGuild().getMemberById(Constants.CO_OWNER_IDS[0]).getUser());
+        builder.setText(event.getMember().getAsMention() + ", your cats.");
+        builder.build().display(event.getTextChannel());
 
         event.getMessage().delete().queue();
     }

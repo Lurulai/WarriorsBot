@@ -11,7 +11,6 @@ import com.vdurmont.emoji.EmojiParser;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.utils.AttachmentOption;
 import utils.Constants;
 import utils.Send;
 
@@ -100,12 +99,34 @@ public class CreateCatto extends Command {
                         Send.error(event, "Age entered isn't a valid number. Try running the command again.", "", 10, TimeUnit.SECONDS);
                         return;
                     }
-                    Message me = Send.reply(event, "If you have a picture of your cat, please send a link. Or an attachment. (OPTIONAL, type `none` if you don't have any.)", "Or type \"cancel\"");
-                    waitForCattoImage(event, me, user, name, age);
+                    Message me = Send.reply(event, "Type a description of your cat. (OPTIONAL, type `none` if you don't have any.)", "Or type \"cancel\"");
+                    waitForCattoDescription(event, me, user, name, age);
                 });
     }
 
-    private void waitForCattoImage(CommandEvent event, Message m, User user, String name, int age) {
+    private void waitForCattoDescription(CommandEvent event, Message me, User user, String name, int age) {
+        waiter.waitForEvent(GuildMessageReceivedEvent.class,
+                e -> e.getAuthor().equals(event.getAuthor()) && e.getChannel().equals(event.getChannel()) && !e.getAuthor().isBot(),
+                e -> {
+                    me.delete().queue();
+                    String message = e.getMessage().getContentRaw().trim();
+                    e.getMessage().delete().queue();
+                    if(message.equalsIgnoreCase("cancel")){
+                        Send.reply(event, "Cancelled creating cat.", "", 5, TimeUnit.SECONDS);
+                        return;
+                    }
+                    else if(message.equalsIgnoreCase("none")){
+                        Message mess = Send.reply(event, "If you have a picture of your cat, please send a link. Or an attachment. (OPTIONAL, type `none` if you don't have any.)", "Or type \"cancel\"");
+                        waitForCattoImage(event, mess, user, name, age, "");
+                    }
+                    else{
+                        Message mess = Send.reply(event, "If you have a picture of your cat, please send a link. Or an attachment. (OPTIONAL, type `none` if you don't have any.)", "Or type \"cancel\"");
+                        waitForCattoImage(event, mess, user, name, age, message);
+                    }
+                });
+    }
+
+    private void waitForCattoImage(CommandEvent event, Message m, User user, String name, int age, String description) {
         waiter.waitForEvent(GuildMessageReceivedEvent.class,
                 e -> e.getAuthor().equals(event.getAuthor()) && e.getChannel().equals(event.getChannel()) && !e.getAuthor().isBot(),
                 e -> {
@@ -133,11 +154,11 @@ public class CreateCatto extends Command {
                     }
 
                     e.getMessage().delete().queue();
-                    waitForClass(event, user, name, age, imageLink);
+                    waitForClass(event, user, name, age, description, imageLink);
                 });
     }
 
-    private void waitForClass(CommandEvent event, User user, String name, int age, String imageLink) {
+    private void waitForClass(CommandEvent event, User user, String name, int age, String description, String imageLink) {
         new ButtonMenu.Builder()
                 .setChoices(ONE, TWO, THREE, FOUR, FIVE, CANCEL)
                 .setEventWaiter(waiter)
@@ -158,7 +179,7 @@ public class CreateCatto extends Command {
                                     ":two: Senior\n" +
                                     ":three: Regular\n" +
                                     ":four: Young";
-                            waitForSubClass(event, user, name, age, imageLink, classType, subclasses, 4);
+                            waitForSubClass(event, user, name, age, description, imageLink, classType, subclasses, 4);
                             break;
                         }
                         case ":two:": {
@@ -166,31 +187,31 @@ public class CreateCatto extends Command {
                             String subclasses = ":one: Senior\n" +
                                     ":two: Regular\n" +
                                     ":three: Young";
-                            waitForSubClass(event, user, name, age, imageLink, classType, subclasses, 3);
+                            waitForSubClass(event, user, name, age, description, imageLink, classType, subclasses, 3);
                             break;
                         }
                         case ":three:": {
                             String classType = "medicine";
                             String subclasses = ":one: Full\n" +
                                     ":two: Apprentice";
-                            waitForSubClass(event, user, name, age, imageLink, classType, subclasses, 2);
+                            waitForSubClass(event, user, name, age, description, imageLink, classType, subclasses, 2);
                             break;
                         }
                         case ":four:": {
                             String classType = "misc";
                             String subclasses = ":one: Elder\n" +
                                     ":two: Queen";
-                            waitForSubClass(event, user, name, age, imageLink, classType, subclasses, 2);
+                            waitForSubClass(event, user, name, age, description, imageLink, classType, subclasses, 2);
                             break;
                         }
                         case ":five:": {
-                            Kit kit = new Kit(name);
+                            Kit kit = new Kit(name, description);
                             kit.setAge(age);
                             kit.setImageUrl(imageLink);
                             boolean isValid = kit.setSubClass(1);
                             if (isValid) user.addCatto(kit);
                             CreateCatto.registeredUsers.add(user);
-                            printCattoProfile(event, "Kit", "", name, age, imageLink);
+                            printCattoProfile(event, "Kit", "", name, age, imageLink, description);
                             break;
                         }
                         case ":x:": {
@@ -204,7 +225,7 @@ public class CreateCatto extends Command {
                 }).build().display(event.getTextChannel());
     }
 
-    private void waitForSubClass(CommandEvent event, User user, String name, int age, String imageLink, String classType, String subclasses, int numClasses) {
+    private void waitForSubClass(CommandEvent event, User user, String name, int age, String description, String imageLink, String classType, String subclasses, int numClasses) {
         new ButtonMenu.Builder()
                 .setDescription("Pick smol fiter\n" + subclasses)
                 .addChoices(getEmojis(numClasses))
@@ -219,39 +240,39 @@ public class CreateCatto extends Command {
                     }
                     switch (classType.toLowerCase()) {
                         case "warrior": {
-                            Warrior warrior = new Warrior(name);
+                            Warrior warrior = new Warrior(name, description);
                             warrior.setAge(age);
                             warrior.setImageUrl(imageLink);
                             boolean isValid = warrior.setSubClass(emojiToNumber(EmojiParser.parseToAliases(v.getEmoji())));
                             if (isValid) user.addCatto(warrior);
-                            printCattoProfile(event, "Warrior", warrior.getSubClass(), name, age, imageLink);
+                            printCattoProfile(event, "Warrior", warrior.getSubClass(), name, age, imageLink, description);
                             break;
                         }
                         case "apprentice": {
-                            Apprentice apprentice = new Apprentice(name);
+                            Apprentice apprentice = new Apprentice(name, description);
                             apprentice.setAge(age);
                             apprentice.setImageUrl(imageLink);
                             boolean isValid = apprentice.setSubClass(emojiToNumber(EmojiParser.parseToAliases(v.getEmoji())));
                             if (isValid) user.addCatto(apprentice);
-                            printCattoProfile(event, "Apprentice", apprentice.getSubClass(), name, age, imageLink);
+                            printCattoProfile(event, "Apprentice", apprentice.getSubClass(), name, age, imageLink, description);
                             break;
                         }
                         case "medicine": {
-                            Medicine medicine = new Medicine(name);
+                            Medicine medicine = new Medicine(name, description);
                             medicine.setAge(age);
                             medicine.setImageUrl(imageLink);
                             boolean isValid = medicine.setSubClass(emojiToNumber(EmojiParser.parseToAliases(v.getEmoji())));
                             if (isValid) user.addCatto(medicine);
-                            printCattoProfile(event, "Medicine", medicine.getSubClass(), name, age, imageLink);
+                            printCattoProfile(event, "Medicine", medicine.getSubClass(), name, age, imageLink, description);
                             break;
                         }
                         case "misc": {
-                            Misc misc = new Misc(name);
+                            Misc misc = new Misc(name, description);
                             misc.setAge(age);
                             misc.setImageUrl(imageLink);
                             boolean isValid = misc.setSubClass(emojiToNumber(EmojiParser.parseToAliases(v.getEmoji())));
                             if (isValid) user.addCatto(misc);
-                            printCattoProfile(event, "Misc", misc.getSubClass(), name, age, imageLink);
+                            printCattoProfile(event, "Misc", misc.getSubClass(), name, age, imageLink, description);
                             break;
                         }
                     }
@@ -264,10 +285,10 @@ public class CreateCatto extends Command {
                 }).build().display(event.getTextChannel());
     }
 
-    private void printCattoProfile(CommandEvent event, String classType, String subClass, String name, int age, String imageLink) {
+    private void printCattoProfile(CommandEvent event, String classType, String subClass, String name, int age, String imageLink, String description) {
         EmbedBuilder em = new EmbedBuilder();
-        em.setTitle("Cat Created");
-        em.setDescription(event.getAuthor().getAsMention() + ", your catto has been created.");
+        em.setTitle(event.getAuthor().getAsMention()+"'s Cat Created");
+        if(!description.isEmpty()) em.setDescription(description);
         em.setColor(Color.orange);
         em.addField("Name", name, true);
         em.addBlankField(true);

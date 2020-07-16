@@ -9,12 +9,12 @@ public class Misc extends Catto {
         super("Misc");
     }
 
-    public Misc(String name){
-        super(name, "Misc");
+    public Misc(String name, String description){
+        super(name, "Misc", description);
     }
 
-    public Misc(String name, int age) {
-        super(name, age, "Misc");
+    public Misc(String name, int age, String description) {
+        super(name, age, "Misc", description);
     }
 
     public boolean setSubClass(int subClass) {

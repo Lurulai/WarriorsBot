@@ -4,6 +4,7 @@ import cattos.SubClass;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import commands.CreateCatto;
+import commands.Health;
 import commands.Profile;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
@@ -68,7 +69,8 @@ public class WarriorBot {
                 .addCommands(
                         // Add commands here
                         new CreateCatto(waiter),
-                        new Profile(waiter)
+                        new Profile(waiter),
+                        new Health()
                 );
         System.out.println("Module loaded");
 

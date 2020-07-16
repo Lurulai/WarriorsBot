@@ -51,6 +51,11 @@
             <name>jcenter</name>
             <url>https://jcenter.bintray.com/</url>
         </repository>
+        <repository>
+            <id>jitpack</id>
+            <name>jitpack</name>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -76,6 +81,13 @@
             <type>pom</type>
             <scope>compile</scope>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.Andre601</groupId>-->
+<!--            <artifactId>jda-utilities</artifactId>-->
+<!--            <version>master-SNAPSHOT</version>-->
+<!--            <type>pom</type>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>

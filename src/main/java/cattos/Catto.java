@@ -6,20 +6,23 @@ public abstract class Catto {
     private String name;
     private String cattoClass;
     private String imageUrl;
+    private String description;
 
     public Catto(String cattoClass){
         this.cattoClass = cattoClass;
     }
 
-    public Catto(String name, String cattoClass){
+    public Catto(String name, String cattoClass, String description){
         this.name = name;
         this.cattoClass = cattoClass;
+        this.description = description;
     }
 
-    public Catto(String name, int age, String cattoClass){
+    public Catto(String name, int age, String cattoClass, String description){
         this.name = name;
         this.age = age;
         this.cattoClass = cattoClass;
+        this.description = description;
     }
 
     public int getAge() {
@@ -63,4 +66,12 @@ public abstract class Catto {
     abstract boolean setSubClass(int subclass);
     abstract int getHealth();
     abstract void setHealth(int health);
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
