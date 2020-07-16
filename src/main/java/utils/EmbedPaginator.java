@@ -202,7 +202,7 @@ public class EmbedPaginator extends Menu {
                 final int targetPage;
 
                 if(leftText != null && rawContent.equalsIgnoreCase(leftText) && (1 < pageNum || wrapPageEnds))
-                    targetPage = pageNum - 1 < 1 && wrapPageEnds ? pages : pageNum - 1;
+                    targetPage = pageNum - 1 < 1 ? pages : pageNum - 1;
                 else if(rightText != null && rawContent.equalsIgnoreCase(rightText) && (pageNum < pages || wrapPageEnds))
                     targetPage = pageNum + 1 > pages && wrapPageEnds ? 1 : pageNum + 1;
                 else

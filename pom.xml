@@ -16,7 +16,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Warrior.WarriorBot</mainClass>
+                            <mainClass>warrior.WarriorBot</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

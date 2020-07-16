@@ -1,4 +1,4 @@
-package Warrior;
+package warrior;
 
 import cattos.SubClass;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
