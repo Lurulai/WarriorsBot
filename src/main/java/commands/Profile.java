@@ -7,6 +7,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import readingwriting.JSONData;
 import utils.Constants;
 import utils.EmbedPaginator;
 import utils.Send;
@@ -34,7 +35,10 @@ public class Profile extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        User u = CreateCatto.registeredUsers.stream().filter(v -> v.getUserID().equals(event.getAuthor().getId())).findFirst().orElse(null);
+        User u = null;
+        if(JSONData.registeredUsers.containsKey(event.getGuild().getId())){
+            u = JSONData.registeredUsers.get(event.getGuild().getId()).stream().filter(v -> v.getUserID().equals(event.getAuthor().getId())).findFirst().orElse(null);
+        }
         if(u == null){
             Send.error(event, "You don't have any cats. Create a cat by using this command:\n" +
                     "`"+Constants.D_PREFIX+"create`", "", 10, TimeUnit.SECONDS);

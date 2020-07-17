@@ -1,6 +1,8 @@
 package cattouser;
 
 import cattos.Catto;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.ArrayList;
 
@@ -12,6 +14,14 @@ public class User {
     private String userID;
     // List of cattos they have
     private ArrayList<Catto> cattos;
+
+    /**
+     * Default constructor
+     */
+    public User(){
+        super();
+        this.cattos = new ArrayList<>();
+    }
 
     /**
      * Creates a new user given their userid in string
@@ -66,5 +76,15 @@ public class User {
      */
     public void setUserID(String userID){
         this.userID = userID;
+    }
+
+    /**
+     * Given a new arraylist of cattos, it updates the arraylist with new
+     * @param newCattos new arraylist to replace the old one with
+     */
+    public void setCatto(ArrayList<Catto> newCattos) {
+        if(newCattos != null || newCattos.size() != 0){
+            this.cattos = newCattos;
+        }
     }
 }

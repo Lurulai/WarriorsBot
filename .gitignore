@@ -114,3 +114,6 @@ fabric.properties
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
+database/
+src/main/resources/
+src/test/

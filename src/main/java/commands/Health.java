@@ -4,12 +4,12 @@ import cattos.*;
 import cattouser.User;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import readingwriting.JSONData;
+import utils.Constants;
+import utils.Send;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class Health extends Command {
     public Health() {
         this.name = "health";
-        this.aliases = new String[]{"callhealth"};
+        this.aliases = new String[]{"callhealth", "hp"};
 //        this.category = new Category("Informative");
         this.ownerCommand = false;
     }
@@ -40,9 +40,13 @@ public class Health extends Command {
         StringBuilder cattoNames = new StringBuilder();
         StringBuilder cattoHealth = new StringBuilder();
 
-        User u = CreateCatto.registeredUsers.stream().filter(v -> v.getUserID().equals(userID)).findFirst().orElse(null);
+        User u = null;
+        if(JSONData.registeredUsers.containsKey(event.getGuild().getId())){
+            u = JSONData.registeredUsers.get(event.getGuild().getId()).stream().filter(v -> v.getUserID().equals(userID)).findFirst().orElse(null);
+        }
         if(u == null){
-            event.getTextChannel().sendMessage("Ha sucker, you don't have cattos").queue();
+            Send.error(event, "You don't have any cats. Create a cat by using this command:\n" +
+                    "`"+ Constants.D_PREFIX+"create`", "", 10, TimeUnit.SECONDS);
             return;
         }
 

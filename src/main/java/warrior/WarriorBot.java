@@ -1,17 +1,23 @@
 package warrior;
 
 import cattos.SubClass;
+import cattouser.User;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import commands.CreateCatto;
+import commands.DeleteCatto;
 import commands.Health;
 import commands.Profile;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
 import org.apache.log4j.BasicConfigurator;
+import readingwriting.JSONData;
 import utils.Constants;
 
 import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * WarriorBot class which is the main class, contains only initialization of main processes used
@@ -36,7 +42,7 @@ public class WarriorBot {
 
         // Initializing the bot, setting status, and adding commands
         jda = JDABuilder.createDefault(Constants.CLIENT_SECRET_CODE)
-                .addEventListeners(commandClient(waiter).build(), waiter, new PrivateChannelListener())
+                .addEventListeners(commandClient(waiter).build(), waiter)
                 .setActivity(Activity.of(Activity.ActivityType.DEFAULT, "Booting up..."))
                 .setStatus(OnlineStatus.ONLINE).build();
 
@@ -48,6 +54,9 @@ public class WarriorBot {
 
         // Initialize subclasses
         SubClass.initializeAllSubclasses();
+
+        // Loads the data from json files
+        JSONData.loadAllUsers();
     }
 
     /**
@@ -69,6 +78,7 @@ public class WarriorBot {
                 .addCommands(
                         // Add commands here
                         new CreateCatto(waiter),
+                        new DeleteCatto(waiter),
                         new Profile(waiter),
                         new Health()
                 );

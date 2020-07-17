@@ -1,8 +1,21 @@
 package cattos;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * An abstract Catto class with common methods and abstract ones that can be overridden.
  */
+@JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "cattoClass")
+@JsonSubTypes({
+        @JsonSubTypes.Type(name = "Warrior", value = Warrior.class),
+        @JsonSubTypes.Type(name = "Apprentice", value = Apprentice.class),
+        @JsonSubTypes.Type(name = "Kit", value = Kit.class),
+        @JsonSubTypes.Type(name = "Medicine", value = Medicine.class),
+        @JsonSubTypes.Type(name = "Misc", value = Misc.class),
+})
 public abstract class Catto {
     // Age of catto
     private int age;
